@@ -19,3 +19,16 @@ after_success:
     - docker push paolapo/example-nginx
     - docker push paolapo/example-server
     - docker push paolapo/example-worker
+
+deploy:
+    edge: true
+    provider: elasticbeanstalk
+    region:  us-east-2
+    app: docker-simple
+    env: DockerSimple-env
+    bucket_name: elasticbeanstalk-us-east-2-111577139685
+    bucket_path: docker-simple
+    on:
+        branch: master
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY    
