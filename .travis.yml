@@ -1,0 +1,22 @@
+sudo: required
+services: 
+    - docker
+
+before_install:
+    - docker build -t paolapo/docker-example -f ./client/Dockerfile.dev ./client
+        
+script:
+    - docker run -e CI=true paolapo/react-test npm test
+
+after_success:
+    - docker build -t paolapo/example-client ./client
+    - docker build -t paolapo/example-nginx ./nginx  
+    - docker build -t paolapo/example-server ./server 
+    - docker build -t paolapo/example-worker ./worker
+    
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin 
+    
+    - docker push paolapo/example-client
+    - docker push paolapo/example-nginx
+    - docker push paolapo/example-server
+    - docker push paolapo/example-worker
